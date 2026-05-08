@@ -1,0 +1,373 @@
+# 4.2.1 QUESTION:
+# 1. Read a CSV filename from user input.
+# 2. Columns: Date, Product, Quantity, Price, City.
+# 3. Calculate 'Total_Sales' (Quantity * Price).
+# 4. Group by Month and find the total sales for each.
+# 5. Output the best performing month and its total sales amount.
+
+import pandas as pd
+
+# Prompt the user for the file name
+file_name = input()
+
+try:
+    # Load the data
+    df = pd.read_csv(file_name)
+
+    # Calculate Total Sales for each row
+    df['Total_Sales'] = df['Quantity'] * df['Price']
+
+    # Convert Date column to datetime objects
+    df['Date'] = pd.to_datetime(df['Date'])
+
+    # Extract the month (Period format YYYY-MM)
+    df['Month'] = df['Date'].dt.to_period('M')
+
+    # Group by Month and sum the sales
+    monthly_sales = df.groupby('Month')['Total_Sales'].sum()
+
+    # Identify the month with the highest sales
+    best_month = monthly_sales.idxmax()
+    highest_sales = monthly_sales.max()
+
+    # Display results
+    print(f"Best month: {best_month}")
+    print(f"Total sales: ${highest_sales:.2f}")
+
+except Exception as e:
+    print(f"An error occurred: {e}")
+
+
+# 4.2.2 QUESTION :
+# 1. Read a CSV filename from user input.
+# 2. Columns: Date, Product, Quantity, Price, City.
+# 3. Group the data by 'Product' and sum the 'Quantity'.
+# 4. Identify the product with the highest total quantity sold.
+# 5. Display the best-selling product and its total quantity.
+
+import pandas as pd
+
+# Get the filename from user input
+file_name = input()
+
+try:
+    # Read the CSV file
+    df = pd.read_csv(file_name)
+
+    # Group by 'Product' and sum the 'Quantity' column
+    product_sales = df.groupby('Product')['Quantity'].sum()
+
+    # Find the product with the maximum quantity sold
+    best_selling_product = product_sales.idxmax()
+    total_quantity = product_sales.max()
+
+    # Display the results
+    print(best_selling_product)
+    print(total_quantity)
+
+except Exception as e:
+    # Handle potential errors (like file not found)
+    print(f"Error: {e}")
+
+
+# 4.2.3 QUESTION :
+# 1. Read a CSV filename from user input.
+# 2. Columns: Date, Product, Quantity, Price, City.
+# 3. Group the data by 'City' and calculate the total 'Quantity' sold for each.
+# 4. Find the city with the highest total quantity sold.
+# 5. Output the city name and the total quantity.
+
+import pandas as pd
+
+# Input the filename
+file_name = input()
+
+try:
+    # Read the dataset
+    df = pd.read_csv(file_name)
+
+    # Group by 'City' and sum the 'Quantity'
+    city_sales = df.groupby('City')['Quantity'].sum()
+
+    # Identify the city with the maximum quantity sold
+    best_city = city_sales.idxmax()
+    max_quantity = city_sales.max()
+
+    # Display the results
+    print(best_city)
+    print(max_quantity)
+
+except Exception as e:
+    print(f"Error: {e}")
+
+
+# 4.2.4 QUESTION:
+# 1. Read a CSV filename from user input.
+# 2. Columns: Date, Product, Quantity, Price, City.
+# 3. For each unique date, identify all possible pairs of products sold.
+# 4. Count the frequency of each product pair across the entire dataset.
+# 5. Output the most frequent product pair(s) and their count.
+
+import pandas as pd
+from itertools import combinations
+from collections import Counter
+
+# Get filename from user
+file_name = input()
+
+try:
+    # Load the dataset
+    df = pd.read_csv(file_name)
+
+    # Group products by Date
+    # We create a list of products for each unique date
+    grouped = df.groupby('Date')['Product'].apply(list)
+
+    pair_counts = Counter()
+
+    # Generate pairs for each date
+    for products in grouped:
+        # Sort products to ensure (A, B) is treated the same as (B, A)
+        products.sort()
+        # Generate all unique combinations of 2
+        unique_pairs = list(combinations(products, 2))
+        pair_counts.update(unique_pairs)
+
+    # Find the maximum frequency
+    if pair_counts:
+        max_freq = max(pair_counts.values())
+        
+        # Identify all pairs that match the maximum frequency
+        best_pairs = [pair for pair, count in pair_counts.items() if count == max_freq]
+
+        # Display results
+        for pair in best_pairs:
+            # Formatting output to match the requirement: Product A and Product B (Count times)
+            print(f"{pair[0]} and {pair[1]} ({max_freq} times)")
+    else:
+        print("No pairs found.")
+
+except Exception as e:
+    print(f"Error: {e}")
+
+
+# 4.2.5 QUESTION :
+# 1. Display first 5 rows and last 5 rows.
+# 2. Get dataset shape and summary info.
+# 3. Get basic statistics (describe) and check for missing values.
+# 4. Handle missing 'Age' (fill with median) and 'Embarked' (fill with mode).
+# 5. Drop the 'Cabin' column.
+# 6. Create 'FamilySize' column (SibSp + Parch).
+
+import pandas as pd
+import numpy as np
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# 1. Display the first 5 rows of the dataset
+print(data.head())
+
+# 2. Display the last 5 rows of the dataset
+print(data.tail())
+
+# 3. Get the shape of the dataset (number of rows and columns)
+print(data.shape)
+
+# 4. Get a summary of the dataset
+print(data.info())
+
+# 5. Get basic statistics of the dataset
+print(data.describe())
+
+# 6. Check for missing values and display the count for each column
+print(data.isnull().sum())
+
+# 7. Fill missing values in the ‘Age’ column with the median age
+data['Age'] = data['Age'].fillna(data['Age'].median())
+
+# 8. Fill missing values in the ‘Embarked’ column with the most frequent value (mode)
+data['Embarked'] = data['Embarked'].fillna(data['Embarked'].mode()[0])
+
+# 9. Drop the ‘Cabin’ column due to many missing values
+data.drop(columns=['Cabin'], inplace=True)
+
+# 10. Create a new column 'FamilySize' by adding 'SibSp' and 'Parch'
+data['FamilySize'] = data['SibSp'] + data['Parch']
+
+# Optional: Display first 5 rows to verify the new column and dropped column
+print(data.head())
+
+
+# 4.2.6 QUESTION:
+# 1. Create 'IsAlone' column (1 if FamilySize == 0, else 0).
+# 2. Map 'Sex' to numeric (male: 0, female: 1).
+# 3. One-hot encode 'Embarked' and drop the first category.
+# 4. Calculate and print mean age.
+# 5. Calculate and print median fare.
+# 6. Count and print passengers per class (Pclass).
+# 7. Count and print passengers per gender (Sex).
+# 8. Count and print passengers per survival status (Survived).
+# 9. Calculate and print total survival rate.
+# 10. Calculate and print survival rate grouped by gender.
+
+import pandas as pd
+import numpy as np
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Pre-requisite: FamilySize (needed for IsAlone)
+data['FamilySize'] = data['SibSp'] + data['Parch']
+
+# 1. Create 'IsAlone' column
+data['IsAlone'] = (data['FamilySize'] == 0).astype(int)
+
+# 2. Convert 'Sex' to numeric
+data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})
+
+# 3. One-hot encode 'Embarked' column
+data = pd.get_dummies(data, columns=['Embarked'], drop_first=True)
+
+# 4. Mean age of passengers
+mean_age = data['Age'].mean()
+print(mean_age)
+
+# 5. Median fare of passengers
+median_fare = data['Fare'].median()
+print(median_fare)
+
+# 6. Number of passengers by class
+print(data['Pclass'].value_counts())
+
+# 7. Number of passengers by gender
+print(data['Sex'].value_counts())
+
+# 8. Number of passengers by survival status
+print(data['Survived'].value_counts())
+
+# 9. Calculate overall survival rate
+survival_rate = data['Survived'].mean()
+print(survival_rate)
+
+# 10. Calculate survival rate by gender
+survival_by_gender = data.groupby('Sex')['Survived'].mean()
+print(survival_by_gender)
+
+
+# 4.2.7 QUESTION:
+# 1. Survival rate by Pclass.
+# 2. Survival rate by Embarked_S (from dummy variables).
+# 3. Survival rate by FamilySize.
+# 4. Survival rate by IsAlone status.
+# 5. Average fare by Pclass.
+# 6. Average age by Pclass.
+# 7. Average age by survival status.
+# 8. Average fare by survival status.
+# 9. Number of survivors by Pclass.
+# 10. Number of non-survivors by Pclass.
+
+import pandas as pd
+
+# Load the dataset
+df = pd.read_csv('Titanic-Dataset.csv')
+
+# Pre-processing required for the questions
+df['FamilySize'] = df['SibSp'] + df['Parch']
+df['IsAlone'] = (df['FamilySize'] == 0).astype(int)
+# Creating Embarked_S for question 2 (assuming standard one-hot encoding)
+df['Embarked_S'] = (df['Embarked'] == 'S').astype(int)
+
+# 1. Survival rate by class
+print(df.groupby('Pclass')['Survived'].mean())
+
+# 2. Survival rate by embarkation location (S)
+print(df.groupby('Embarked_S')['Survived'].mean())
+
+# 3. Survival rate by family size
+print(df.groupby('FamilySize')['Survived'].mean())
+
+# 4. Survival rate by being alone
+print(df.groupby('IsAlone')['Survived'].mean())
+
+# 5. Average fare by passenger class
+print(df.groupby('Pclass')['Fare'].mean())
+
+# 6. Average age by passenger class
+print(df.groupby('Pclass')['Age'].mean())
+
+# 7. Average age by survival status
+print(df.groupby('Survived')['Age'].mean())
+
+# 8. Average fare by survival status
+print(df.groupby('Survived')['Fare'].mean())
+
+# 9. Number of survivors by class
+print(df[df['Survived'] == 1].groupby('Pclass')['Survived'].count())
+
+# 10. Number of non-survivors by class
+print(df[df['Survived'] == 0].groupby('Pclass')['Survived'].count())
+
+
+# 4.2.8 QUESTION:
+# 1. Get the number of survivors by gender (Sex).
+# 2. Get the number of non-survivors by gender (Sex).
+# 3. Get the number of survivors by embarkation location (Embarked_S).
+# 4. Get the number of non-survivors by embarkation location (Embarked_S).
+# 5. Calculate the percentage of children (Age < 18) who survived.
+# 6. Calculate the percentage of adults (Age >= 18) who survived.
+# 7. Get the median age of survivors.
+# 8. Get the median age of non-survivors.
+# 9. Get the median fare of survivors.
+# 10. Get the median fare of non-survivors.
+
+import pandas as pd
+import numpy as np
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Pre-processing: Create Embarked_S dummy variable
+data['Embarked_S'] = (data['Embarked'] == 'S').astype(int)
+
+# 1. Get the number of survivors by gender
+survivors_by_gender = data[data['Survived'] == 1]['Sex'].value_counts()
+print(survivors_by_gender)
+
+# 2. Get the number of non-survivors by gender
+nonsurvivors_by_gender = data[data['Survived'] == 0]['Sex'].value_counts()
+print(nonsurvivors_by_gender)
+
+# 3. Get the number of survivors by embarkation location (Embarked_S)
+survivors_embarked_S = data[data['Survived'] == 1]['Embarked_S'].value_counts()
+print(survivors_embarked_S)
+
+# 4. Get the number of non-survivors by embarkation location (Embarked_S)
+nonsurvivors_embarked_S = data[data['Survived'] == 0]['Embarked_S'].value_counts()
+print(nonsurvivors_embarked_S)
+
+# 5. Calculate the percentage of children (Age < 18) who survived
+children = data[data['Age'] < 18]
+children_survival_percentage = children['Survived'].mean() * 100
+print(children_survival_percentage)
+
+# 6. Calculate the percentage of adults (Age >= 18) who survived
+adults = data[data['Age'] >= 18]
+adults_survival_percentage = adults['Survived'].mean() * 100
+print(adults_survival_percentage)
+
+# 7. Get the median age of survivors
+median_age_survivors = data[data['Survived'] == 1]['Age'].median()
+print(median_age_survivors)
+
+# 8. Get the median age of non-survivors
+median_age_nonsurvivors = data[data['Survived'] == 0]['Age'].median()
+print(median_age_nonsurvivors)
+
+# 9. Get the median fare of survivors
+median_fare_survivors = data[data['Survived'] == 1]['Fare'].median()
+print(median_fare_survivors)
+
+# 10. Get the median fare of non-survivors
+median_fare_nonsurvivors = data[data['Survived'] == 0]['Fare'].median()
+print(median_fare_nonsurvivors)

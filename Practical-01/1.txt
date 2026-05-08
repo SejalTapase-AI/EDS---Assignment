@@ -1,0 +1,76 @@
+# 1.2.1 Question Summary:
+# Write a Python program that accepts the number of courses and the marks for each.
+# If any mark is less than 40, print "Fail".
+# Otherwise, calculate the aggregate percentage and print the grade:
+# - > 75: Distinction
+# - 60 to 75: First Division
+# - 50 to 60: Second Division
+# - 40 to 50: Third Division
+# Output should include the percentage (2 decimal places) and the grade.
+
+number_of_courses = int(input())
+marks = list(map(int, input().split()))
+
+failed_any = False
+for m in marks:
+    if m < 40:
+        failed_any = True
+        break
+
+if failed_any:
+    print("Fail")
+else:
+    total_marks = sum(marks)
+    aggregate_percentage = total_marks / number_of_courses
+    
+    print(f"{aggregate_percentage:.2f}")
+    
+    if aggregate_percentage > 75:
+        print("Distinction")
+    elif aggregate_percentage >= 60:
+        print("First Division")
+    elif aggregate_percentage >= 50:
+        print("Second Division")
+    elif aggregate_percentage >= 40:
+        print("Third Division")
+
+
+# 1.2.2 Question: Write a Python program that uses recursion to print 
+# the first n terms of the Fibonacci series. 
+# Input: A single integer n.
+# Output: The first n terms of the sequence separated by spaces.
+
+def fibonacci(n):
+    if n == 1:
+        return 0
+    if n == 2:
+        return 1
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+n = int(input())
+for i in range(1, n + 1):
+    print(fibonacci(i), end=" ")
+
+# 1.2.3 Question Summary: 
+# Write a Python program to print a pattern of asterisks (*) 
+# in the form of a right-angled triangle based on an input 
+# integer representing the number of rows.
+
+rows = int(input())
+for i in range(1, rows + 1):
+    print("*" * i)
+
+# 1.2.4 Question Summary: 
+# Write a Python program to print a right-angled triangle pattern of numbers. 
+# The program accepts an integer n for the number of rows.
+# For each row 'i', it prints numbers from 1 to 'i' separated by spaces.
+
+n = int(input())
+
+# Outer loop for rows
+for i in range(1, n + 1):
+    # Inner loop for numbers in each row
+    for j in range(1, i + 1):
+        print(j, end=" ")
+    # Move to the next line
+    print()

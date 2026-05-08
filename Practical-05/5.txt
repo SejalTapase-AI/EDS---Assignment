@@ -1,0 +1,321 @@
+# 5.2.1. Titanic Dataset
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset from the CSV file
+df = pd.read_csv('titanic.csv')
+
+# Set up the figure for 5 subplots in a 3x2 grid
+fig, axes = plt.subplots(3, 2, figsize=(12, 12))
+
+# 1. Bar Plot: Passenger Class Distribution
+pclass_counts = df['Pclass'].value_counts().sort_index()
+axes[0, 0].bar(pclass_counts.index.astype(str), pclass_counts.values, color='skyblue')
+axes[0, 0].set_title("Passenger Class Distribution")
+axes[0, 0].set_xlabel("Pclass")
+axes[0, 0].set_ylabel("Count")
+
+# 2. Pie Chart: Gender Distribution
+gender_counts = df['Gender'].value_counts()
+axes[0, 1].pie(gender_counts, labels=gender_counts.index, autopct='%1.1f%%', colors=['lightblue', 'lightcoral'])
+axes[0, 1].set_title("Gender Distribution")
+
+# 3. Histogram: Age Distribution
+axes[1, 0].hist(df['Age'].dropna(), bins=8, color='lightgreen', edgecolor='black')
+axes[1, 0].set_title("Age Distribution")
+axes[1, 0].set_xlabel("Age")
+axes[1, 0].set_ylabel("Frequency")
+
+# 4. Bar Plot: Survival Count
+survive_counts = df['Survived'].value_counts().sort_index()
+axes[1, 1].bar(['0', '1'], survive_counts.values, color=['lightcoral', 'lightblue'])
+axes[1, 1].set_title("Survival Count")
+axes[1, 1].set_xlabel("Survived (0 = No, 1 = Yes)")
+axes[1, 1].set_ylabel("Count")
+
+# 5. Scatter Plot: Fare vs Age
+axes[2, 0].scatter(df['Age'], df['Fare'], color='orange')
+axes[2, 0].set_title("Fare vs Age")
+axes[2, 0].set_xlabel("Age")
+axes[2, 0].set_ylabel("Fare")
+
+# Remove the unused 6th subplot
+fig.delaxes(axes[2, 1])
+
+# Adjust layout to prevent overlapping labels
+plt.tight_layout()
+plt.show()
+
+
+# 5.2.2. Histogram of passenger information of Titanic
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+df = pd.read_csv('Titanic-Dataset.csv')
+
+# Plotting the histogram for 'Age'
+plt.hist(df['Age'].dropna(), bins=30, edgecolor='k')
+
+# Adding labels and title
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.title('Age Distribution')
+
+# Display the plot
+plt.show()
+
+
+# 5.2.3. Bar plot of survival rate of passengers
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Data Cleaning
+data['Age'].fillna(data['Age'].median(), inplace=True)
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+data.drop('Cabin', axis=1, inplace=True)
+
+# Convert categorical features to numeric
+data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})
+data = pd.get_dummies(data, columns=['Embarked'], drop_first=True)
+
+# Write your code here for Bar Plot for Survival Rate
+survival_counts = data['Survived'].value_counts()
+survival_counts.plot(kind='bar')
+
+# Adding labels and title
+plt.title('Survival Count')
+plt.xlabel('Survived')
+plt.ylabel('Count')
+
+# Display the plot
+plt.show()
+
+
+# 5.2.4. Bar Plot for Survival by Gender
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Data Cleaning
+data['Age'].fillna(data['Age'].median(), inplace=True)
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+data.drop('Cabin', axis=1, inplace=True)
+
+# Write your code here for Bar Plot for Survival by Gender
+# Group by 'Sex' and count 'Survived' occurrences
+survival_counts = data.groupby('Sex')['Survived'].value_counts().unstack()
+
+# Plotting the stacked bar chart
+survival_counts.plot(kind='bar', stacked=True)
+
+# Adding labels, title and legend
+plt.title('Survival by Gender')
+plt.xlabel('Gender')
+plt.ylabel('Count')
+plt.legend(['Not Survived', 'Survived'])
+
+# Display the plot
+plt.show()
+
+
+# 5.2.5. Bar Plot for Survival by Pclass
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Data Cleaning
+data['Age'].fillna(data['Age'].median(), inplace=True)
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+data.drop('Cabin', axis=1, inplace=True)
+
+# Convert categorical features to numeric
+data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})
+data = pd.get_dummies(data, columns=['Embarked'], drop_first=True)
+
+# Write your code here for Bar Plot for Survival by Pclass
+# Group by 'Pclass' and count 'Survived' occurrences using value_counts()
+survival_counts = data.groupby('Pclass')['Survived'].value_counts().unstack().fillna(0)
+
+# Plotting the stacked bar chart
+survival_counts.plot(kind='bar', stacked=True)
+
+# Adding labels and title
+plt.title('Survival by Pclass')
+plt.xlabel('Pclass')
+plt.ylabel('Count')
+
+# Legend indicating 'Not Survived' and 'Survived'
+plt.legend(['Not Survived', 'Survived'])
+
+# Display the plot
+plt.show()
+
+
+# 5.2.6. Bar Plot for Survival by Embarked
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Data Cleaning
+data['Age'].fillna(data['Age'].median(), inplace=True)
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+data.drop('Cabin', axis=1, inplace=True)
+
+# Write your code here for Bar Plot for Survival by Embarked
+# Group by 'Embarked' and count 'Survived' occurrences
+survival_counts = data.groupby('Embarked')['Survived'].value_counts().unstack()
+
+# Plotting the stacked bar chart
+survival_counts.plot(kind='bar', stacked=True)
+
+# Adding labels, title and legend
+plt.title('Survival by Embarked')
+plt.xlabel('Embarked')
+plt.ylabel('Count')
+plt.legend(['Not Survived', 'Survived'])
+
+# Display the plot
+plt.show()
+
+# 5.2.7. Box plot for Age Distribution
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Data Cleaning
+data['Age'].fillna(data['Age'].median(), inplace=True)
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+data.drop('Cabin', axis=1, inplace=True)
+
+# Convert categorical features to numeric
+data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})
+data = pd.get_dummies(data, columns=['Embarked'], drop_first=True)
+
+# Write your code here for Box Plot for Age by Pclass
+data.boxplot(column='Age', by='Pclass')
+
+# Adding labels and title
+plt.title('Age by Pclass')
+plt.suptitle('')
+plt.xlabel('Pclass')
+plt.ylabel('Age')
+
+# Display the plot
+plt.show()
+
+# 5.2.8. Box Plot for Age by Survived
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Data Cleaning
+data['Age'].fillna(data['Age'].median(), inplace=True)
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+data.drop('Cabin', axis=1, inplace=True)
+
+# Convert categorical features to numeric
+data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})
+data = pd.get_dummies(data, columns=['Embarked'], drop_first=True)
+
+# Write your code here for Box Plot for Age by Survived
+data.boxplot(column='Age', by='Survived')
+
+# Adding labels and title
+plt.title('Age by Survival')
+plt.suptitle('')
+plt.xlabel('Survived')
+plt.ylabel('Age')
+
+# Display the plot
+plt.show()
+
+# 5.2.9. Box Plot for Fare by Pclass
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Data Cleaning
+data['Age'].fillna(data['Age'].median(), inplace=True)
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+data.drop('Cabin', axis=1, inplace=True)
+
+# Convert categorical features to numeric
+data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})
+data = pd.get_dummies(data, columns=['Embarked'], drop_first=True)
+
+# Write your code here for Box Plot for Fare by Pclass
+data.boxplot(column='Fare', by='Pclass')
+
+# Adding labels and title
+plt.title('Fare by Pclass')
+plt.suptitle('')
+plt.xlabel('Pclass')
+plt.ylabel('Fare')
+
+# Display the plot
+plt.show()
+
+
+# 5.2.10. Scatter Plot for Age vs. Fare
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Write your code here for Scatter Plot for Age vs. Fare
+plt.scatter(data['Age'], data['Fare'])
+
+# Adding labels and title
+plt.title('Age vs. Fare')
+plt.xlabel('Age')
+plt.ylabel('Fare')
+
+# Display the plot
+plt.show()
+
+
+# 5.2.11. Scatter Plot for Age vs. Fare by Survived
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Titanic dataset
+data = pd.read_csv('Titanic-Dataset.csv')
+
+# Data Cleaning
+data['Age'].fillna(data['Age'].median(), inplace=True)
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+data.drop('Cabin', axis=1, inplace=True)
+
+# Convert categorical features to numeric
+data['Sex'] = data['Sex'].map({'male': 0, 'female': 1})
+data = pd.get_dummies(data, columns=['Embarked'], drop_first=True)
+
+# Write your code here for Scatter Plot for Age vs. Fare by Survived
+# Map survival status to colors: 0 -> red, 1 -> blue
+colors = {0: 'red', 1: 'blue'}
+plt.scatter(data['Age'], data['Fare'], c=data['Survived'].map(colors))
+
+# Adding title and labels
+plt.title('Age vs. Fare by Survival')
+plt.xlabel('Age')
+plt.ylabel('Fare')
+
+# Display the plot
+plt.show()

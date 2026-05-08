@@ -1,0 +1,32 @@
+# 2.2.1 Question Summary: 
+# Write a program to check whether a given element (key) is present 
+# in an array of integers using linear search. 
+# Input: A space-separated list of integers, followed by the key to search.
+# Output: The starting index of the key if found, otherwise "Not found".
+
+arr = list(map(int, input().split()))
+key = int(input())
+
+found_index = -1
+
+for i in range(len(arr)):
+    if arr[i] == key:
+        found_index = i
+        break
+
+if found_index != -1:
+    print(found_index)
+else:
+    print("Not found")
+
+
+# 2.2.2 Question Summary:
+# You are provided with the heights of 11 cricket players in centimeters.
+# Your task is to identify the tallest player, who will be selected 
+# as the captain of the team.
+# Input: 11 space-separated integers representing player heights.
+# Output: The height of the tallest player.
+
+heights = list(map(int, input().split()))
+tallest = max(heights)
+print(tallest)
